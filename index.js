@@ -1,17 +1,24 @@
+// ./lib/server.js
 
 var http = require('http');
 
+var server = module.exports = http.createServer(function (req, res) {
 
-http.createServer(function (req, res) {
+  if (req.headers['content-type'] === 'text/plain') {
+    var body = '';
+    
+    req.on('data', function (chunk) {
+      body += chunk.toString();
+    });
 
-  res.writeHead(200, {'Content-Type': 'text/plain'});
+    req.on('end', function () { 
+      res.writeHead(200, {'Content-Type': 'text/plain'});
+      res.end('correct header');
+      server.emit('success', body);
+    });
 
- 
-  res.end('Hello World\n');
-
-
-}).listen(8080);
-
-
-console.log('Server running on port 8080.');
-
+  } else {
+    res.writeHead(400, {'Content-Type': 'text/plain'});
+    res.end('wrong header');
+  }
+});
