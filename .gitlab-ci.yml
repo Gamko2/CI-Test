@@ -37,6 +37,6 @@ cache:
 build:
   script:
    - npm install
-   - node index.js
+   - npm test
 
 
